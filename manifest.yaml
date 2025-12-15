@@ -1,12 +1,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: app1
+  name: app2
   # these are replica set labels
   labels:
     purpose: ingress-demo
     project: roboshop
-    app: app1
+    app: app2
 spec:
   replicas: 2
   selector:
@@ -14,7 +14,7 @@ spec:
     matchLabels:
       purpose: ingress-demo
       project: roboshop
-      app: app1
+      app: app2
   # pod definition
   template:
     metadata:
@@ -22,21 +22,21 @@ spec:
         # purpose: dp-demo
         purpose: ingress-demo
         project: roboshop
-        app: app1
+        app: app2
     spec:
       containers:
-      - name: app1
-        image: bharathipotla/app1:v1
+      - name: app2
+        image: joindevops/app2:v1
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: app1
+  name: app2
 spec:
   selector:
     purpose: ingress-demo
     project: roboshop
-    app: app1
+    app: app2
   ports:
     - protocol: TCP
       port: 80 # service port
@@ -45,26 +45,24 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ingress-example
-  annotations: 
-   alb.ingress.kubernetes.io/listen-ports:  '[{"HTTPS": 443}]'
-   alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:406214277354:certificate/2e9fb466-f3a7-4e4b-ba53-ac3545f3738b
-   alb.ingress.kubernetes.io/scheme: internet-facing
-   alb.ingress.kubernetes.io/tags: Environment=dev,Project=roboshop
-   alb.ingress.kubernetes.io/target-type: ip
-   alb.ingress.kubernetes.io/group.name: roboshop
-
+  name: app2
+  annotations:
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 443}]'
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:160885265516:certificate/a1f7483d-ee32-446c-a9b9-e7fdcca18ff6
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/tags: Environment=dev,Project=roboshop
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/group.name: roboshop
 spec:
   ingressClassName: alb
   rules:
-  - host: "app1.bpotla.com"
+  - host: "app2.daws86s.fun"
     http:
       paths:
       - pathType: Prefix
         path: "/"
         backend:
           service:
-            name: app1
+            name: app2
             port:
               number: 80
-  
