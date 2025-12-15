@@ -54,6 +54,7 @@ metadata:
    alb.ingress.kubernetes.io/target-type: ip
 
 spec:
+  ingressClassName: alb
   rules:
   - host: "app1.bpotla.com"
     http:
